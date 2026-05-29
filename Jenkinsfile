@@ -1,7 +1,8 @@
 pipeline {
     agent any
     tools {
-        jdk 'jdk21'
+        jdk 'DefaultJDK'
+        git 'DefaultGit'
     }
     stages {
         stage('Check JDK') {
