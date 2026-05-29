@@ -2,7 +2,7 @@ pipeline {
     agent any
     tools {
         jdk 'DefaultJDK'
-        git 'DefaultGit'
+        git 'Default'
     }
     stages {
         stage('Check JDK') {
