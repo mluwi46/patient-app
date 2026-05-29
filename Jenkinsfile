@@ -21,6 +21,11 @@ pipeline {
                 bat 'jar cfe PatientApp.jar PatientApp -C bin .'
             }
         }
+        stage('Run Console App') {
+            steps {
+                bat 'java -cp bin PatientApp'
+            }
+        }
         stage('Test') {
             steps {
                 bat 'java -cp bin org.junit.runner.JUnitCore PatientAppTest'
@@ -29,7 +34,6 @@ pipeline {
         stage('Deploy') {
             steps {
                 bat 'copy PatientApp.jar C:\\deploy\\PatientApp.jar'
-
                 bat 'docker build -t smartmed/patient-app .'
                 bat 'docker run -d --name patient-app smartmed/patient-app'
             }
