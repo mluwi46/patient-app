@@ -3,18 +3,15 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'javac src/PatientApp.java'
+                bat 'javac -d bin src\\*.java'
             }
         }
         stage('Test') {
             steps {
-                sh 'java -cp .:junit-4.13.2.jar:hamcrest-core-1.3.jar org.junit.runner.JUnitCore PatientAppTest'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                sh 'scp src/PatientApp.class user@server:/apps/smartmed/'
+                bat 'java -cp bin org.junit.runner.JUnitCore PatientAppTest'
             }
         }
     }
+}
+
 }
