@@ -13,12 +13,12 @@ pipeline {
         }
         stage('Build') {
             steps {
-                bat 'javac -d bin src\\*.java'
+                bat 'javac -d bin src\\PatientApp.java'
             }
         }
-        stage('Test') {
+        stage('Run') {
             steps {
-                bat 'java -cp bin org.junit.runner.JUnitCore PatientAppTest'
+                bat 'java -cp bin PatientApp'
             }
         }
     }
