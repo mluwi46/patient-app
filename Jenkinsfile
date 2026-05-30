@@ -38,6 +38,13 @@ pipeline {
             }
         }
 
+        stage('Run App') {
+            steps {
+                echo 'Running PatientApp JAR...'
+                bat 'java -jar target\\patient-app-1.0-SNAPSHOT.jar'
+            }
+        }
+
         stage('Deploy') {
             steps {
                 echo 'Deploying PatientApp to local directory...'
@@ -52,7 +59,7 @@ pipeline {
 
     post {
         success {
-            echo '✅ Build completed successfully!'
+            echo '✅ Build, test, package, run, and deploy completed successfully!'
             archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
         }
         failure {
@@ -60,3 +67,4 @@ pipeline {
         }
     }
 }
+
