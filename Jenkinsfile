@@ -44,20 +44,17 @@ pipeline {
                 echo 'Deploying PatientApp to local directory...'
                 bat "if not exist %DEPLOY_DIR% mkdir %DEPLOY_DIR%"
                 bat "copy target\\patient-app-1.0-SNAPSHOT.jar %DEPLOY_DIR%\\PatientApp.jar"
-                // Uncomment these lines once Docker is ready:
-                // bat 'docker build -t smartmed/patient-app .'
-                // bat 'docker run -d --name patient-app smartmed/patient-app'
             }
         }
     }
 
     post {
         success {
-            echo '✅ Build, test, package, run, and deploy completed successfully!'
+            echo ' Build, test, package, run, and deploy completed successfully!'
             archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
         }
         failure {
-            echo '❌ Build failed — please check the logs for details.'
+            echo ' Build failure: identified by checking the logs for details.'
         }
     }
 }
