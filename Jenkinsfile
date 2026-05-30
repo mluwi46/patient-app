@@ -17,17 +17,10 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build & Test') {
             steps {
-                echo 'Running Maven clean and compile...'
-                bat 'mvn clean compile'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo 'Executing JUnit tests...'
-                bat 'mvn test'
+                echo 'Running Maven build and tests...'
+                bat 'mvn clean verify'
             }
         }
 
@@ -67,4 +60,3 @@ pipeline {
         }
     }
 }
-
