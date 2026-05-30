@@ -2,46 +2,61 @@ pipeline {
     agent any
     tools {
         jdk 'DefaultJDK'
-        git 'Default'
+        maven 'DefaultMaven'
     }
+
+    environment {
+        DEPLOY_DIR = 'C:\\deploy'
+    }
+
     stages {
-        stage('Check JDK') {
+        stage('Checkout') {
             steps {
-                bat 'java -version'
-                bat 'javac -version'
+                echo 'Fetching latest code from GitHub...'
+                checkout scm
             }
         }
+
         stage('Build') {
             steps {
-                bat 'javac -d bin src\\PatientApp.java'
+                echo 'Running Maven clean and compile...'
+                bat 'mvn clean compile'
             }
         }
-        stage('Package JAR') {
-            steps {
-                bat 'jar cfe PatientApp.jar PatientApp -C bin .'
-            }
-        }
-        stage('Run Console App') {
-            steps {
-                bat 'java -cp bin PatientApp'
-            }
-        }
+
         stage('Test') {
             steps {
-                bat 'java -cp bin org.junit.runner.JUnitCore PatientAppTest'
+                echo 'Executing JUnit tests...'
+                bat 'mvn test'
             }
         }
+
+        stage('Package') {
+            steps {
+                echo 'Packaging JAR file...'
+                bat 'mvn package'
+            }
+        }
+
         stage('Deploy') {
             steps {
-                bat 'copy PatientApp.jar C:\\deploy\\PatientApp.jar'
-                bat 'docker build -t smartmed/patient-app .'
-                bat 'docker run -d --name patient-app smartmed/patient-app'
+                echo 'Deploying PatientApp to local directory...'
+                bat "if not exist %DEPLOY_DIR% mkdir %DEPLOY_DIR%"
+                bat "copy target\\patient-app-1.0-SNAPSHOT.jar %DEPLOY_DIR%\\PatientApp.jar"
+                // Uncomment these lines once Docker is ready:
+                // bat 'docker build -t smartmed/patient-app .'
+                // bat 'docker run -d --name patient-app smartmed/patient-app'
             }
         }
     }
+
     post {
         success {
-            archiveArtifacts artifacts: 'PatientApp.jar', fingerprint: true
+            echo '✅ Build completed successfully!'
+            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+        }
+        failure {
+            echo '❌ Build failed — please check the logs for details.'
         }
     }
 }
