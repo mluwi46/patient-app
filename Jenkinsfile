@@ -3,6 +3,7 @@ pipeline {
     tools {
         jdk 'DefaultJDK'
         maven 'DefaultMaven'
+        git 'DefaultGit'   
     }
 
     environment {
@@ -20,14 +21,14 @@ pipeline {
         stage('Build & Test') {
             steps {
                 echo 'Running Maven build and tests...'
-                bat 'mvn clean verify'
+                bat 'mvn -B clean verify'
             }
         }
 
         stage('Package') {
             steps {
                 echo 'Packaging JAR file...'
-                bat 'mvn package'
+                bat 'mvn -B package'
             }
         }
 
